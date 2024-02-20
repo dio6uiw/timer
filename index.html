@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timer da clarinha</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    background-color: purple;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .timer-container {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+    width: 15%;
+    height: 25%;
+    top: 0px;
+    left: 0px;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .timer {
+    text-align: center;
+  }
+
+</style>
+</head>
+<body>
+
+<audio id="timer-sound">
+  <source src="pausa.mp3" type="audio/wav">
+</audio>
+
+<audio id="break-sound">
+  <source src="voltar.mp3" type="audio/wav">
+</audio>
+
+<div class="timer-container">
+  <div class="timer">
+    <h1 id="timer-display">50:00</h1>
+    <button onclick="startTimer()">Iniciar</button>
+    <button onclick="stopTimer()">Pausar</button>
+  </div>
+</div>
+
+<script>
+let timer;
+let timeLeft = 50 * 60;
+let isRunning = false;
+const timerSound = document.getElementById('timer-sound');
+const breakSound = document.getElementById('break-sound');
+
+function startTimer() {
+  if (!isRunning) {
+    isRunning = true;
+    timer = setInterval(updateTimer, 1000);
+  }
+}
+
+function stopTimer() {
+  clearInterval(timer);
+  isRunning = false;
+}
+
+function updateTimer() {
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  document.getElementById('timer-display').textContent = display;
+
+  if (timeLeft <= 0) {
+    clearInterval(timer);
+    isRunning = false;
+    timerSound.play();
+    alert('Hora de dar uma pausa Clarinha, manda um "oi" pro didi :)');
+    startBreakTimer();
+  } else {
+    timeLeft--;
+  }
+}
+
+function startBreakTimer() {
+  timeLeft = 10 * 60;
+  timer = setInterval(updateBreakTimer, 1000);
+}
+
+function updateBreakTimer() {
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  const display = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  document.getElementById('timer-display').textContent = display;
+
+  if (timeLeft <= 0) {
+    clearInterval(timer);
+    isRunning = false;
+    breakSound.play();
+    alert('Hora de voltar Clarinha, mais um passo para você conquistar seus sonhos!');
+    breakSound.play();
+  } else {
+    timeLeft--;
+  }
+}
+</script>
+
+</body>
+</html>
